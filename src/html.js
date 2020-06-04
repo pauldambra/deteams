@@ -8,8 +8,9 @@ export const link = s => {
   return a
 }
 
-export const listItem = child => {
+export const listItem = (child, width = "500px") => {
   const li = document.createElement('li')
+  li.width = width
   li.appendChild(child)
   return li
 }

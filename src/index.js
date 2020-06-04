@@ -9,9 +9,12 @@ const onError = e => {
 }
 
 const onNext = s => {
-  const ul = document.getElementsByClassName('links')[0].children[0]
-  const li = listItem(link(s))
-  ul.appendChild(li)
+  const output = document.getElementsByClassName('output')[0]
+
+
+  const ol = document.getElementsByClassName('links')[0].children[0]
+  const li = listItem(link(s), output.width)
+  ol.prepend(li)
 }
 
 document.addEventListener('DOMContentLoaded', () => {

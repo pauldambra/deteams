@@ -4,21 +4,54 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <style type="text/css">
+        li {
+            overflow-wrap: break-word;
+        }
+
+        .main {
+            padding: 1em;
+        }
+
+        .title {
+            text-align: center;
+        }
+
+        textarea {
+            width: 98%;
+            height: 10em;
+        }
+
+        .output {
+            overflow: hidden;
+        }
+
+        .message {
+            padding: 1% 5%;
+            background-color: aliceblue;
+        }
+    </style>
 </head>
 <body>
 
 <div class="main">
     <div class="title"><h1><%= htmlWebpackPlugin.options.title %></h1></div>
     <section>
-        <div>some text</div>
         <div>
-            <input type="text" class="undeteamsified">
+            <p>I really do dislike MS Teams</p>
+            <p>When I'm sent a Teams link it's often a different Office 245 app link wrapped in a Teams link</p>
+            <p>I got bored manually extracting the useful link so I can minimise my Teams exposure</p>
+            <p>So now I can paste a Teams link in the box below</p>
+            <p>(wonder at how much smaller the link is when done)</p>
+        </div>
+        <div>
+            <textarea class="undeteamsified" autofocus></textarea>
         </div>
         <div class="output">
             <div class="message"></div>
+            <h2>Your deteamsified links:</h2>
             <div class="links">
-                <ul></ul>
+                <ol></ol>
             </div>
         </div>
     </section>

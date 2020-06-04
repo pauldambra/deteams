@@ -8,13 +8,14 @@ export const isValidHttpUrl = string => {
   try {
     url = new URL(string);
   } catch (_) {
+    send("That's not an HTTP URL")
     return false;
   }
 
   if (url.protocol === "http:" || url.protocol === "https:") {
     return true
   } else {
-    send(`${string} is not an HTTP URL`)
+    send("That's not an HTTP URL")
     return false
   }
 }
@@ -24,7 +25,7 @@ export const isTeamsLink = url => {
   if (url.host === "teams.microsoft.com") {
     return true
   } else {
-    send(`${url.toString()} is not a teams URL`)
+    send("That's not a teams URL")
     return false
   }
 }
@@ -33,7 +34,7 @@ export const mightContainASecretHiddenLink = url => {
   if (url.search && url.search.includes('https%3A%2F%2F')) {
     return true
   } else {
-    send('this teams link does not contain a hidden link. to deteamsify - just stop using teams')
+    send('That teams link does not contain a hidden link. to deteamsify - just stop using teams')
     return false
   }
 }
