@@ -8,6 +8,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'Deteams a teams link',
+      template: 'template-index.html'
     }),
   ],
   output: {
