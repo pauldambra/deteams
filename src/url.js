@@ -31,10 +31,11 @@ export const isTeamsLink = url => {
 }
 
 export const mightContainASecretHiddenLink = url => {
+  console.log(url, 'u')
   if (url.search && url.search.includes('https%3A%2F%2F')) {
     return true
   }
-  else if(url.includes('channel') || url.includes('thread.skype')) {
+  else if(url.pathname.includes('channel') || url.pathname.includes('thread.skype')) {
     send('That teams link does not contain a hidden link. It looks like a link to a teams team team channel, you might have to use teams 🤬')
     return false
   } else {
