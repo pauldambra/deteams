@@ -11,6 +11,6 @@ export const deteamsify = u => {
     send('')
     return objectURL
   } else {
-    send("no URL found in this teams URL, soz. 🤷‍♀️")
+    send("no hidden URL found in this teams URL, soz. 🤷‍♀️")
   }
 }
