@@ -31,8 +31,11 @@ export const isTeamsLink = url => {
 }
 
 export const mightContainASecretHiddenLink = url => {
-  console.log(url, 'u')
-  if (url.search && url.search.includes('https%3A%2F%2F')) {
+  const hasLinkInSearchParam = url => url && url.search && url.search.includes('https%3A%2F%2F');
+
+  const hasViewerUrlInHash = url => url && url.hash && url.hash.includes('https:~2F~2F');
+
+  if (hasLinkInSearchParam(url) || hasViewerUrlInHash(url)) {
     return true
   }
   else if(url.pathname.includes('channel') || url.pathname.includes('thread.skype')) {
