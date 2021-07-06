@@ -18,7 +18,7 @@ export const span = (children) => {
   return s
 }
 
-export const listItem = (child, width = "500px") => {
+export const listItem = (child, width = '500px') => {
   const li = document.createElement('li')
   li.width = width
   li.appendChild(child)

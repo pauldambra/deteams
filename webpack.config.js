@@ -1,6 +1,6 @@
-const path = require('path')
-const {CleanWebpackPlugin} = require('clean-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+import path from 'path'
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 
 module.exports = {
   entry: './src/index.js',
@@ -9,11 +9,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Deteams a teams link',
       template: 'template-index.html'
-    }),
+    })
   ],
   output: {
     filename: '[name].[contenthash].js',
-    path: path.resolve(__dirname, 'docs'),
+    path: path.resolve(__dirname, 'docs')
   },
   optimization: {
     moduleIds: 'deterministic',
@@ -22,9 +22,9 @@ module.exports = {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'all',
-        },
-      },
-    },
-  },
+          chunks: 'all'
+        }
+      }
+    }
+  }
 }

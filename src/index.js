@@ -2,7 +2,7 @@ import { fromEvent } from 'rxjs'
 import { debounceTime, filter, map } from 'rxjs/operators'
 import { isTeamsLink, isValidHttpUrl, mightContainASecretHiddenLink } from './url'
 import { deteamsify } from './deteamsifier'
-import {link, listItem, span, text} from './html'
+import { link, listItem, span, text } from './html'
 import { send } from './messages'
 
 const onError = e => {
@@ -19,12 +19,12 @@ const onNext = s => {
     const output = document.getElementsByClassName('output')[0]
     const ol = document.getElementsByClassName('links')[0].children[0]
     const li = listItem(
-        span(
-            [
-              text('this is probably a download link for '),
-              link(s.downloadURL, output.width)
-            ]
-        )
+      span(
+        [
+          text('this is probably a download link for '),
+          link(s.downloadURL, output.width)
+        ]
+      )
     )
     ol.prepend(li)
   }
@@ -32,7 +32,7 @@ const onNext = s => {
 
 const hasContent = s => {
   send('')
-  return !!(s && s.length > 0);
+  return !!(s && s.length > 0)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
