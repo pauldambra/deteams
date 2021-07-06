@@ -16,7 +16,7 @@ module.exports = {
     path: path.resolve(__dirname, 'docs'),
   },
   optimization: {
-    moduleIds: 'hashed',
+    moduleIds: 'deterministic',
     splitChunks: {
       cacheGroups: {
         vendor: {
