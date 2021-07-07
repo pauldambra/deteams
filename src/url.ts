@@ -2,11 +2,11 @@
 import { send } from './messages'
 
 // from https://stackoverflow.com/a/43467144/222163
-export const isValidHttpUrl = string => {
+export const isValidHttpUrl = (s: string): boolean => {
   let url
 
   try {
-    url = new URL(string)
+    url = new URL(s)
   } catch (_) {
     send("That's not an HTTP URL")
     return false
@@ -21,7 +21,7 @@ export const isValidHttpUrl = string => {
 }
 
 // assumes input is definitely a valid url
-export const isTeamsLink = url => {
+export const isTeamsLink = (url: URL) : boolean => {
   if (url.host === 'teams.microsoft.com') {
     return true
   } else {
@@ -30,10 +30,10 @@ export const isTeamsLink = url => {
   }
 }
 
-export const mightContainASecretHiddenLink = url => {
-  const hasLinkInSearchParam = url => url && url.search && url.search.includes('https%3A%2F%2F')
+export const mightContainASecretHiddenLink = (url: URL): boolean => {
+  const hasLinkInSearchParam = (u: URL) => u && u.search && u.search.includes('https%3A%2F%2F')
 
-  const hasViewerUrlInHash = url => url && url.hash && url.hash.includes('https:~2F~2F')
+  const hasViewerUrlInHash = (u: URL) => u && u.hash && u.hash.includes('https:~2F~2F')
 
   if (hasLinkInSearchParam(url) || hasViewerUrlInHash(url)) {
     return true

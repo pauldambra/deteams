@@ -1,4 +1,4 @@
-export const link = (url) => {
+export const link = (url: string): HTMLAnchorElement => {
   const a = document.createElement('a')
   const linkText = document.createTextNode(url)
   a.appendChild(linkText)
@@ -8,9 +8,9 @@ export const link = (url) => {
   return a
 }
 
-export const text = (content) => document.createTextNode(content)
+export const text = (content: string): Text => document.createTextNode(content)
 
-export const span = (children) => {
+export const span = (children: Array<HTMLElement | Text>): HTMLSpanElement => {
   const s = document.createElement('span')
   for (const c of children) {
     s.appendChild(c)
@@ -18,9 +18,8 @@ export const span = (children) => {
   return s
 }
 
-export const listItem = (child, width = '500px') => {
+export const listItem = (child: HTMLElement): HTMLElement => {
   const li = document.createElement('li')
-  li.width = width
   li.appendChild(child)
   return li
 }

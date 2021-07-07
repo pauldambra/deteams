@@ -1,8 +1,8 @@
-import mocha from 'mocha'
+import * as mocha from 'mocha'
 import { mightContainASecretHiddenLink } from '../src/url'
-import chai from 'chai'
+import * as chai from 'chai'
 import { deteamsify } from '../src/deteamsifier'
-import dirtyChai from 'dirty-chai'
+import * as dirtyChai from 'dirty-chai'
 const { expect } = chai
 chai.use(dirtyChai)
 const { describe, it } = mocha
