@@ -4,7 +4,9 @@ const messages = new Subject<string>()
 messages.subscribe(
     (s: string) => {
     if (typeof (document) !== 'undefined') {
-      document.getElementsByClassName('message')[0].textContent = s
+      if (document.getElementsByClassName('message')[0]) {
+          document.getElementsByClassName('message')[0].textContent = s
+      }
     }
   }
 )
