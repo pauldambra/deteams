@@ -115,7 +115,6 @@ class TypeOfTeamsURL implements ChainLink<URL> {
 class ReadTeamsLinkFromSearchParams implements ChainLink<URL>{
     handle(url: URL): ChainResult {
         const searchParams = url.searchParams
-        // todo: write a test on this error case for this link in isolation
         const hiddenURL = searchParams.get('objectUrl')
         return hiddenURL ? { hiddenURL } : { error: 'unexpected error, maybe refresh and try again' }
     }
@@ -144,67 +143,83 @@ describe("using chain of responsibility to deteamsify", () => {
         )
     )
 
-    it("can detect that the empty string is invalid", () => {
-        const result = createChain().handle("")
-        expect(result.error).to.eql("there must be content in the string")
+    const testCases = [
+        {
+            userInput: "",
+            expectedProperty: "error",
+            expectedValue: "there must be content in the string"
+        },
+        {
+            userInput: "literally any content",
+            expectedProperty: "error",
+            expectedValue: "you must provide a web URL"
+        },
+        {
+            userInput: "ftp://example.io",
+            expectedProperty: "error",
+            expectedValue: "you must provide a web URL"
+        },
+        {
+            userInput: "https://example.io",
+            expectedProperty: "error",
+            expectedValue: "that's not a Teams link"
+        },
+        {
+            userInput: "https://teams.microsoft.com",
+            expectedProperty: "error",
+            expectedValue: "That teams link does not contain a hidden link. to deteamsify - just stop using teams"
+        },
+        {
+            userInput: "https://teams.microsoft.com?anything=something",
+            expectedProperty: "error",
+            expectedValue: "That teams link does not contain a hidden link. to deteamsify - just stop using teams"
+        },
+        {
+            userInput: "https://teams.microsoft.com#something",
+            expectedProperty: "error",
+            expectedValue: "That teams link does not contain a hidden link. to deteamsify - just stop using teams"
+        },
+        {
+            userInput: "https://teams.microsoft.com/thread.skype",
+            expectedProperty: "error",
+            expectedValue: "That teams link does not contain a hidden link. It looks like a link to a teams team team channel, you might have to use teams 🤬"
+        },
+        {
+            userInput: "https://teams.microsoft.com/channel",
+            expectedProperty: "error",
+            expectedValue: "That teams link does not contain a hidden link. It looks like a link to a teams team team channel, you might have to use teams 🤬"
+        },
+        {
+            userInput: "https://teams.microsoft.com?anything=https%3A%2F%2F",
+            expectedProperty: "error",
+            expectedValue: "unexpected error, maybe refresh and try again"
+        },
+        {
+            userInput: "https://teams.microsoft.com#https:~2F~2F",
+            expectedProperty: "error",
+            expectedValue: "this viewer URL can't be processed, please report a bug"
+        },
+        {
+            userInput: "https://teams.microsoft.com?objectUrl=https%3A%2F%2Fexample.sharepoint.com%2Fsites%2F",
+            expectedProperty: "hiddenURL",
+            expectedValue: "https://example.sharepoint.com/sites/"
+        },
+        {
+            userInput: "https://teams.microsoft.com/_#/xlsx/viewer/teams/https:~2F~2Fomniclopse.sharepoint.com~2Fsites~2F",
+            expectedProperty: "downloadURL",
+            expectedValue: "https://omniclopse.sharepoint.com/sites/"
+        },
+    ]
+
+    testCases.forEach((testCase) => {
+        it(`on receiving userInput: "${testCase.userInput}" chain outputs an: "${testCase.expectedProperty}"`, () => {
+            const result = createChain().handle(testCase.userInput)
+            expect(result)
+                .to.haveOwnProperty(
+                    testCase.expectedProperty,
+                    testCase.expectedValue
+                )
+        })
     })
 
-    it("can pass on to the second link in a chain when there is content in the input", () => {
-        const result = createChain().handle("literally any content")
-        expect(result).to.haveOwnProperty("error", "you must provide a web URL")
-    })
-
-    it("can have a chain that detects valid HTTP urls", () => {
-        const chain = createChain()
-
-        expect(chain.handle("some text")).to.haveOwnProperty("error")
-        expect(chain.handle("ftp://example.io")).to.haveOwnProperty("error")
-        expect(chain.handle("https://example.io"))
-            .to.haveOwnProperty("error", 'that\'s not a Teams link')
-    })
-
-    it("can have a chain that detects Teams urls", () => {
-        const chain = createChain()
-
-        expect(chain.handle("https://example.io")).to.haveOwnProperty("error")
-        expect(chain.handle("https://teams.microsoft.com"))
-            .to.haveOwnProperty("error", "That teams link does not contain a hidden link. to deteamsify - just stop using teams")
-    })
-
-    it("can have a chain that decides between two paths", () => {
-        const chain = createChain()
-
-        expect(chain.handle("https://teams.microsoft.com?anything=something"))
-            .to.haveOwnProperty("error")
-        expect(chain.handle("https://teams.microsoft.com#something"))
-            .to.haveOwnProperty("error")
-        expect(chain.handle("https://teams.microsoft.com/thread.skype"))
-            .to.haveOwnProperty("error")
-        expect(chain.handle("https://teams.microsoft.com/channel"))
-            .to.haveOwnProperty("error")
-        expect(chain.handle("https://teams.microsoft.com?anything=https%3A%2F%2F"))
-            .to.haveOwnProperty("error", "unexpected error, maybe refresh and try again")
-        expect(chain.handle("https://teams.microsoft.com#https:~2F~2F"))
-            .to.haveOwnProperty("error", "this viewer URL can't be processed, please report a bug")
-    })
-
-    it('can have a chain which can read the hidden link from search params', () => {
-        const chain = createChain()
-
-        expect(chain.handle("https://teams.microsoft.com?objectUrl=https%3A%2F%2Fexample.sharepoint.com%2Fsites%2F"))
-            .to.haveOwnProperty("hiddenURL", "https://example.sharepoint.com/sites/")
-
-        expect(chain.handle("https://teams.microsoft.com#https:~2F~2F"))
-            .to.haveOwnProperty("error", "this viewer URL can't be processed, please report a bug")
-    })
-
-    it('can have a chain which can read the viewer URL from the URL hash', () => {
-        const chain = createChain()
-
-        expect(chain.handle("https://teams.microsoft.com?not-an-object-url=some-content"))
-            .to.haveOwnProperty("error")
-
-        expect(chain.handle("https://teams.microsoft.com/_#/xlsx/viewer/teams/https:~2F~2Fomniclopse.sharepoint.com~2Fsites~2F"))
-            .to.haveOwnProperty("downloadURL", "https://omniclopse.sharepoint.com/sites/")
-    })
 })
