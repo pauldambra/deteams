@@ -10,6 +10,7 @@ export interface ChainLink<TReceive> {
 
 export class HasContent implements ChainLink<string> {
     private nextLink: ChainLink<string>;
+
     constructor(nextLink: ChainLink<string>) {
         this.nextLink = nextLink;
     }
@@ -45,7 +46,6 @@ export class IsHTTPURL implements ChainLink<string> {
             return { error: "you must provide a web URL" }
         }
     }
-
 }
 
 export class IsTeamsURL implements ChainLink<URL> {
@@ -62,7 +62,6 @@ export class IsTeamsURL implements ChainLink<URL> {
             return { error: "that's not a Teams link" }
         }
     }
-
 }
 
 export class TypeOfTeamsURL implements ChainLink<URL> {
