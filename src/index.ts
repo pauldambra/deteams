@@ -4,6 +4,7 @@ import { isTeamsLink, isValidHttpUrl, mightContainASecretHiddenLink } from './ur
 import {deteamsify, DeteamsingResult} from './deteamsifier'
 import { link, listItem, span, text } from './html'
 import { send } from './messages'
+import {createChain} from "./chain-of-responsibility";
 
 const onError = (e: Error) => {
   document.getElementsByClassName('message')[0].innerHTML = e.message
@@ -37,6 +38,8 @@ const hasContent = (s: string): boolean => {
   return !!(s && s.length > 0)
 }
 
+const deteamsifyChain = createChain()
+
 document.addEventListener('DOMContentLoaded', () => {
   fromEvent(document.getElementsByClassName('undeteamsified'), 'input')
     .pipe(
@@ -49,5 +52,13 @@ document.addEventListener('DOMContentLoaded', () => {
       filter(mightContainASecretHiddenLink),
       map(deteamsify)
     )
-    .subscribe(onNext, onError)
+    .subscribe(console.log, console.log)
+
+  fromEvent(document.getElementsByClassName('undeteamsified'), 'input')
+      .pipe(
+          debounceTime(200),
+          map(x => (<HTMLInputElement>x.target).value),
+          map(x => deteamsifyChain.handle(x))
+      )
+      .subscribe(onNext, onError)
 })
